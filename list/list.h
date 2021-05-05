@@ -31,6 +31,7 @@
         const type (*front)(const list_##type* list); \
         const type (*back)(const list_##type* list); \
         void (*push_front)(list_##type* list, type data); \
+        void (*push_back)(list_##type* list, type data); \
     }; \
     typedef struct list_functions_pointers_##type list_functions_pointers_##type; \
     \
@@ -40,6 +41,7 @@
     const type front_##type (const list_##type* list); \
     const type back_##type(const list_##type* list); \
     void push_front_##type(list_##type*, type data); \
+    void push_back_##type(list_##type* list, type data); \
     \
     \
      list_functions_pointers_##type list_functions_##type = {\
@@ -47,7 +49,8 @@
         &size_##type, \
         &front_##type, \
         &back_##type, \
-        &push_front_##type \
+        &push_front_##type, \
+        &push_back_##type \
     }; \
     \
     \
@@ -83,12 +86,31 @@
         if(list->head == NULL) \
         {\
             list->head = new_node; \
+            list->tail = new_node; \
         } \
         else \
         {\
-            list_node_##type* temp = list -> head; \
+            list_node_##type* temp = list->head; \
             new_node->next = temp; \
+            temp->prev = new_node; \
             list->head = new_node; \
+        } \
+        ++list->size; \
+    } \
+    void push_back_##type(list_##type* list, type data) \
+    {\
+        list_node_##type* new_node = create_node_##type(data); \
+        if(list->tail == NULL) \
+        {\
+            list->head = new_node; \
+            list->tail = new_node; \
+        } \
+        else \
+        {\
+            list_node_##type* temp = list->tail; \
+            new_node->prev = list->tail; \
+            temp->next = new_node; \
+            list->tail = new_node; \
         } \
         ++list->size; \
     } \
@@ -143,5 +165,6 @@
 #define size(list) list->functions->size(list)
 #define front(list) list->functions->front(list)
 #define push_front(list, data) list->functions->push_front(list, data)
+#define push_back(list, data) list->functions->push_back(list, data)
 
 #endif
