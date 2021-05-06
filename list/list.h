@@ -42,6 +42,7 @@
         void (*pop_front)(list_##type* list); \
         void (*pop_back)(list_##type* list); \
         list_node_##type* (*insert)(list_##type* list, list_node_##type* node, int n, type data); \
+        void (*remove_list) (list_##type* list, type data); \
         list_node_##type* (*find)(list_##type* list, type data); \
         iterator_list_##type* (*begin)(list_##type* list); \
         iterator_list_##type* (*end)(list_##type* list); \
@@ -61,6 +62,7 @@
     void pop_front_##type (list_##type* list); \
     void pop_back_##type (list_##type* list); \
     list_node_##type* insert_##type(list_##type* list, list_node_##type* node, int n, type data); \
+    void remove_list_##type(list_##type* list, type data); \
     list_node_##type* find_##type(list_##type* list, type data); \
     iterator_list_##type* begin_##type(list_##type* list); \
     iterator_list_##type* end_##type(list_##type* list); \
@@ -79,6 +81,7 @@
         &pop_front_##type, \
         &pop_back_##type, \
         &insert_##type, \
+        &remove_list_##type, \
         &find_##type, \
         &begin_##type, \
         &end_##type, \
@@ -202,6 +205,23 @@
             temp = temp -> prev; \
         } \
         return temp; \
+    } \
+    \
+    void remove_list_##type(list_##type* list, type data) \
+    {\
+        list_node_##type* temp = list->head; \
+        while(temp) \
+        {\
+            if(temp->data == data) \
+            {\
+                if(list->head == temp) list->head = temp->next; \
+                if(list->tail == temp) list->tail = temp->prev; \
+                if(temp->prev) temp->prev->next = temp->next; \
+                if(temp->next) temp->next->prev = temp->prev; \
+                --list->size; \
+            } \
+            temp = temp->next; \
+        } \
     } \
     \
     list_node_##type* find_##type(list_##type* list, type data) \
@@ -366,7 +386,12 @@
 
 #ifndef INSERT_FUNC
 #define INSERT_FUNC
-#define insert(list, node, n, data) (list)->functions->insert(list, node, n, data)
+#define insert(list,node, n, data) (list)->functions->insert(list, node, n, data)
+#endif
+
+#ifndef REMOVE_list_FUNC
+#define REMOVE_list_FUNC
+#define remove_list(list, data) (list)->functions->remove_list(list, data)
 #endif
 
 #ifndef FIND_FUNC
