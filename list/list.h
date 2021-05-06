@@ -198,11 +198,34 @@
 
 //dtor can be a function of list because the list object exists. 
 //therefore, the user need not enter the type as an argument in delete like in ctor 
+#ifndef DELETE_FUNC
+#define DELETE_FUNC
 #define delete(list) list->functions->delete(&list)
-#define empty(list) list->functions->empty(list)
+#endif
+
+#ifndef SIZE_FUNC
+#define SIZE_FUNC
 #define size(list) list->functions->size(list)
+#endif
+
+#ifndef EMPTY_FUNC
+#define EMPTY_FUNC
+#define empty(list) list->functions->empty(list)
+#endif
+
+#ifndef FRONT_FUNC
+#define FRONT_FUNC
 #define front(list) list->functions->front(list)
+#endif
+
+#ifndef PUSH_FRONT_FUNC
+#define PUSH_FRONT_FUNC
 #define push_front(list, data) list->functions->push_front(list, data)
+#endif
+
+#ifndef PUSH_BACK_FUNC
+#define PUSH_BACK_FUNC
 #define push_back(list, data) list->functions->push_back(list, data)
+#endif
 
 #endif
