@@ -32,6 +32,7 @@
         const type (*back)(const list_##type* list); \
         void (*push_front)(list_##type* list, type data); \
         void (*push_back)(list_##type* list, type data); \
+        void (*delete)(list_##type** list); \
     }; \
     typedef struct list_functions_pointers_##type list_functions_pointers_##type; \
     \
@@ -42,6 +43,7 @@
     const type back_##type(const list_##type* list); \
     void push_front_##type(list_##type*, type data); \
     void push_back_##type(list_##type* list, type data); \
+    void delete_##type(list_##type** list); \
     \
     \
      list_functions_pointers_##type list_functions_##type = {\
@@ -50,7 +52,8 @@
         &front_##type, \
         &back_##type, \
         &push_front_##type, \
-        &push_back_##type \
+        &push_back_##type, \
+        &delete_##type \
     }; \
     \
     \
@@ -98,6 +101,7 @@
         } \
         ++list->size; \
     } \
+    \
     void push_back_##type(list_##type* list, type data) \
     {\
         list_node_##type* new_node = create_node_##type(data); \
@@ -114,6 +118,20 @@
             list->tail = new_node; \
         } \
         ++list->size; \
+    } \
+    \
+    void delete_##type(list_##type** list) \
+    {\
+        list_node_##type* temp = (*list)->head; \
+        list_node_##type* prev; \
+        while(temp != NULL) \
+        {\
+            prev = temp; \
+            temp = temp->next; \
+            free(prev); \
+        } \
+        free(*list); \
+        *list = NULL; \
     } \
     \
     \
@@ -172,10 +190,15 @@
     } \
 
 #define list(type) list_##type
-//#define new_list(type, n, ...) new_list_##type(n, ##__VA_ARGS__)
+
+//ctor cannot be a function of list becuase the object doesnt exist yet
 #define new_list(type, arg1, ...) _Generic ((arg1), \
                                             int : new_list_##type, \
                                             list_##type* : new_list_copy_##type) (arg1, ##__VA_ARGS__)
+
+//dtor can be a function of list because the list object exists. 
+//therefore, the user need not enter the type as an argument in delete like in ctor 
+#define delete(list) list->functions->delete(&list)
 #define empty(list) list->functions->empty(list)
 #define size(list) list->functions->size(list)
 #define front(list) list->functions->front(list)

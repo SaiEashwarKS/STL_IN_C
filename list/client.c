@@ -1,5 +1,6 @@
 #include"list.h"
 #include<stdio.h>
+#include<assert.h>
 
 define_list(int);
 define_list(char);
@@ -44,4 +45,7 @@ int main()
     display_char(c);
     list(char)* c2 = new_list(char, c);
     display_char(c2);
+    delete(c);
+    if(c == NULL)
+        printf("c is null\n");
 }
