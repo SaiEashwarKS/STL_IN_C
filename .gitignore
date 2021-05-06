@@ -1,3 +1,4 @@
 *.o
 *.out
-try.c
+try*.c
+.vscode
