@@ -9,6 +9,7 @@
     struct list_##type; \
     struct list_functions_pointers_##type; \
     struct list_node_##type; \
+    struct iterator_list_##type; \
     \
     struct list_##type {\
         struct list_node_##type *head; \
@@ -25,6 +26,12 @@
     }; \
     typedef struct list_node_##type list_node_##type; \
     \
+    struct iterator_list_##type {\
+        int is_reverse; \
+        list_node_##type* iter; \
+    }; \
+    typedef struct iterator_list_##type iterator_list_##type; \
+    \
     struct list_functions_pointers_##type {\
         int (*empty)(const list_##type* list); \
         int (*size)(const list_##type* list); \
@@ -36,8 +43,10 @@
         void (*pop_back)(list_##type* list); \
         list_node_##type* (*insert)(list_##type* list, list_node_##type* node, int n, type data); \
         list_node_##type* (*find)(list_##type* list, type data); \
-        list_node_##type* (*begin)(list_##type* list); \
-        list_node_##type* (*end)(list_##type* list); \
+        iterator_list_##type* (*begin)(list_##type* list); \
+        iterator_list_##type* (*end)(list_##type* list); \
+        iterator_list_##type* (*rbegin)(list_##type* list); \
+        iterator_list_##type* (*rend)(list_##type* list); \
         void (*delete)(list_##type** list); \
     }; \
     typedef struct list_functions_pointers_##type list_functions_pointers_##type; \
@@ -53,8 +62,10 @@
     void pop_back_##type (list_##type* list); \
     list_node_##type* insert_##type(list_##type* list, list_node_##type* node, int n, type data); \
     list_node_##type* find_##type(list_##type* list, type data); \
-    list_node_##type* begin_##type(list_##type* list); \
-    list_node_##type* end_##type(list_##type* list); \
+    iterator_list_##type* begin_##type(list_##type* list); \
+    iterator_list_##type* end_##type(list_##type* list); \
+    iterator_list_##type* rbegin_##type(list_##type* list); \
+    iterator_list_##type* rend_##type(list_##type* list); \
     void delete_##type(list_##type** list); \
     \
     \
@@ -71,6 +82,8 @@
         &find_##type, \
         &begin_##type, \
         &end_##type, \
+        &rbegin_##type, \
+        &rend_##type, \
         &delete_##type \
     }; \
     \
@@ -203,15 +216,34 @@
         return NULL; \
     } \
     \
-    list_node_##type* begin_##type(list_##type* list) \
+    iterator_list_##type* begin_##type(list_##type* list) \
     {\
-        return list->head; \
+        iterator_list_##type* it = (iterator_list_##type*)malloc(sizeof(iterator_list_##type)); \
+        it->is_reverse = 0; \
+        it->iter = list->head; \
+        return it; \
     } \
-    list_node_##type* end_##type(list_##type* list) \
+    iterator_list_##type* end_##type(list_##type* list) \
     {\
-        if(list->tail) \
-           return list->tail->next; \
-        return NULL; \
+        iterator_list_##type* it = (iterator_list_##type*)malloc(sizeof(iterator_list_##type)); \
+        it->is_reverse = 0; \
+        it->iter = NULL; \
+        return it; \
+    } \
+    \
+    iterator_list_##type* rbegin_##type(list_##type* list) \
+    {\
+        iterator_list_##type* it = (iterator_list_##type*)malloc(sizeof(iterator_list_##type)); \
+        it->is_reverse = 1; \
+        it->iter = list->tail; \
+        return it; \
+    } \
+    iterator_list_##type* rend_##type(list_##type* list) \
+    {\
+        iterator_list_##type* it = (iterator_list_##type*)malloc(sizeof(iterator_list_##type)); \
+        it->is_reverse = 1; \
+        it->iter = NULL; \
+        return it; \
     } \
     \
     void delete_##type(list_##type** list) \
@@ -352,23 +384,43 @@
 #define end(list) (list)->functions->end(list)
 #endif
 
+#ifndef RBEGIN_FUNC
+#define RBEGIN_FUNC
+#define rbegin(list) (list)->functions->rbegin(list)
+#endif
+
+#ifndef REND_FUNC
+#define REND_FUNC
+#define rend(list) (list)->functions->rend(list)
+#endif
+
 
 //iterator
-#define iterator_list(type) list_node_##type 
+#define iterator_list(type) iterator_list_##type
 
 #ifndef ITER_LIST_DEREF_FUNC
 #define ITER_LIST_DEREF_FUNC
-#define iter_list_deref(it) it->data
+#define iter_list_deref(it) it->iter->data
+#endif 
+
+#ifndef ITER_LIST_EQUAL_FUNC
+#define ITER_LIST_EQUAL_FUNC
+#define iter_list_equal(it1, it2) it1->iter == it2->iter
+#endif 
+
+#ifndef ITER_LIST_NOTEQUAL_FUNC
+#define ITER_LIST_NOTEQUAL_FUNC
+#define iter_list_notequal(it1, it2) it1->iter != it2->iter
 #endif 
 
 #ifndef ITER_LIST_FORWARD_FUNC
 #define ITER_LIST_FORWARD_FUNC
-#define iter_list_forward(it) it = it->next
+#define iter_list_forward(it) it->iter = it->iter!=NULL ? (it->is_reverse ? it->iter->prev : it->iter->next) : NULL
 #endif 
 
 #ifndef ITER_LIST_BACKWARD_FUNC
 #define ITER_LIST_BACKWARD_FUNC
-#define iter_list_backward(it) it = it->prev
+#define iter_list_backward(it) it->iter = it->iter!=NULL ? (it->is_reverse ? it->iter->next : it->iter->prev) : NULL
 #endif
 
 #endif
