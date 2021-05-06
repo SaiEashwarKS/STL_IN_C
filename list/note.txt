@@ -1,0 +1,9 @@
+Issues : 
+va_arg (in new_list_fill_##type) works well only for int
+
+
+Overloaded interfaces :
+new_list : 
+    new_list(type, 0) : default
+    new_list(type, int n, type data) : fill
+    new_list(type, list(type)* list) : copy

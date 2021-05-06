@@ -44,5 +44,4 @@ int main()
     display_char(c);
     list(char)* c2 = new_list(char, c);
     display_char(c2);
-
 }
