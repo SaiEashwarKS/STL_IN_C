@@ -14,7 +14,7 @@
 		int front;int back;int size;\
 		int maxie; \
 		type queue[100001];\
-		struct functions_deque_##type* funcallow; \
+		struct functions_deque_##type* functions; \
 	}deque_##type; \
 \
 	struct functions_deque_##type \
@@ -116,7 +116,7 @@
 		queue->front=-1;queue->back=-1;\
 		queue->size=0;\
 		queue->maxie=100001;\
-		queue->funcallow=&funobj;\
+		queue->functions=&funobj;\
 		return queue;\
 	}\
 \
@@ -155,14 +155,49 @@
 #define new_deque(type,argi,...) _Generic((argi),\
 									  int: new_deque_##type,\
 									  deque_##type*: copy_deque_##type)(argi,##__VA_ARGS__)
-#define empty(queue) queue->funcallow->empty(queue)
-#define size(queue) queue->funcallow->size(queue)
-#define max_size(queue) queue->funcallow->max_size(queue)
-#define at(queue,position) queue->funcallow->at(queue,position)
-#define front(queue) queue->funcallow->front(queue)
-#define back(queue) queue->funcallow->back(queue)
-#define insert(queue,elem) queue->funcallow->insert(queue,elem)
-#define pop(queue) queue->funcallow->remove(queue)
-#define clear(queue) queue->size=0;queue->front=-1;queue->back=-1
+#ifndef EMPTY_FUNC
+#define EMPTY_FUNC							  
+#define empty(queue) (queue)->functions->empty(queue)
+#endif
+
+#ifndef SIZE_FUNC
+#define SIZE_FUNC
+#define size(queue) (queue)->functions->size(queue)
+#endif
+
+#ifndef MAX_SIZE_FUNC
+#define MAX_SIZE_FUNC
+#define max_size(queue) (queue)->functions->max_size(queue)
+#endif
+
+#ifndef AT_FUNC
+#define AT_FUNC
+#define at(queue,position) (queue)->functions->at(queue,position)
+#endif
+
+#ifndef FRONT_FUNC
+#define FRONT_FUNC
+#define front(queue) (queue)->functions->front(queue)
+#endif
+
+#ifndef BACK_FUNC
+#define BACK_FUNC
+#define back(queue) (queue)->functions->back(queue)
+#endif
+
+#ifndef INSERT_FUNC
+#define INSERT_FUNC
+#define insert(queue,elem) (queue)->functions->insert(queue,elem)
+#endif
+
+#ifndef POP_FUNC
+#define POP_FUNC
+#define pop(queue) (queue)->functions->remove(queue)
+#endif
+
+#ifndef CLEAR_FUNC
+#define CLEAR_FUNC
+#define clear(queue) (queue)->size=0;queue->front=-1;queue->back=-1
+#endif
 
 #endif
