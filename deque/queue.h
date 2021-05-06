@@ -178,6 +178,17 @@
 #define empty(queue) (queue)->functions->empty(queue)
 #endif
 
+#ifndef BEGIN_FUNC
+#define BEGIN_FUNC							  
+#define begin(queue) (queue)->functions->begin(queue)
+#endif
+
+#ifndef END_FUNC
+#define END_FUNC							  
+#define end(queue) (queue)->functions->end(queue)
+#endif
+
+
 #ifndef SIZE_FUNC
 #define SIZE_FUNC
 #define size(queue) (queue)->functions->size(queue)
