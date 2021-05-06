@@ -42,4 +42,7 @@ int main()
     push_back(c, 'b');
     push_front(c, 'c');
     display_char(c);
+    list(char)* c2 = new_list(char, c);
+    display_char(c2);
+
 }
