@@ -34,6 +34,8 @@
         void (*push_back)(list_##type* list, type data); \
         void (*pop_front)(list_##type* list); \
         void (*pop_back)(list_##type* list); \
+        list_node_##type* (*insert)(list_##type* list, list_node_##type* node, int n, type data); \
+        list_node_##type* (*find)(list_##type* list, type data); \
         void (*delete)(list_##type** list); \
     }; \
     typedef struct list_functions_pointers_##type list_functions_pointers_##type; \
@@ -42,11 +44,13 @@
     int empty_##type (const list_##type* list); \
     int size_##type (const list_##type* list); \
     const type front_##type (const list_##type* list); \
-    const type back_##type(const list_##type* list); \
-    void push_front_##type(list_##type*, type data); \
-    void push_back_##type(list_##type* list, type data); \
-    void pop_front_##type(list_##type* list); \
-    void pop_back_##type(list_##type* list); \
+    const type back_##type (const list_##type* list); \
+    void push_front_##type (list_##type*, type data); \
+    void push_back_##type (list_##type* list, type data); \
+    void pop_front_##type (list_##type* list); \
+    void pop_back_##type (list_##type* list); \
+    list_node_##type* insert_##type(list_##type* list, list_node_##type* node, int n, type data); \
+    list_node_##type* find_##type(list_##type* list, type data); \
     void delete_##type(list_##type** list); \
     \
     \
@@ -59,6 +63,8 @@
         &push_back_##type, \
         &pop_front_##type, \
         &pop_back_##type, \
+        &insert_##type, \
+        &find_##type, \
         &delete_##type \
     }; \
     \
@@ -154,6 +160,41 @@
             list->tail->next = NULL; \
         } \
         --list->size; \
+    } \
+    \
+    list_node_##type* insert_##type(list_##type* list, list_node_##type* node, int n, type data) \
+    {\
+        list_node_##type* new_node = create_node_##type(data); \
+        list_node_##type* temp = node; \
+        for(int i = 0; i < n; ++i) \
+        {\
+            new_node->next = temp; \
+            new_node->prev = temp->prev; \
+            if(temp->prev) \
+            {\
+                temp->prev->next = new_node; \
+            } \
+            temp->prev = new_node; \
+            if(new_node->prev == NULL) \
+            {\
+                list->head = new_node; \
+            } \
+            ++list->size; \
+            temp = temp -> prev; \
+        } \
+        return temp; \
+    } \
+    \
+    list_node_##type* find_##type(list_##type* list, type data) \
+    {\
+        list_node_##type* temp = list->head; \
+        while(temp != NULL) \
+        {\
+            if(temp->data == data) \
+                return temp; \
+            temp = temp->next; \
+        } \
+        return NULL; \
     } \
     \
     void delete_##type(list_##type** list) \
@@ -272,6 +313,16 @@
 #ifndef POP_BACK_FUNC
 #define POP_BACK_FUNC
 #define pop_back(list) (list)->functions->pop_back(list)
+#endif
+
+#ifndef INSERT_FUNC
+#define INSERT_FUNC
+#define insert(list, node, n, data) (list)->functions->insert(list, node, n, data)
+#endif
+
+#ifndef FIND_FUNC
+#define FIND_FUNC
+#define find(list, data) (list)->functions->find(list, data)
 #endif
 
 #endif

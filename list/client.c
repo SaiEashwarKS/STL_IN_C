@@ -41,6 +41,7 @@ int main()
     if(c == NULL)
         printf("c is null\n");
 
+    printf("\n");
     list(int) a;
     a = *new_list(int, 3, 10); //fill ctor
     display_int(&a);
@@ -52,4 +53,8 @@ int main()
     pop_back(&a);
     pop_back(&a);
     display_int(&a);
+    insert(&a, a.head->next, 1, 20);
+    display_int(&a);
+    assert(find(&a, 200) == NULL);
+    assert(find(&a, 20) != NULL);
 }
