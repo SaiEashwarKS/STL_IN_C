@@ -42,19 +42,31 @@ int main()
         printf("c is null\n");
 
     printf("\n");
-    list(int) a;
-    a = *new_list(int, 3, 10); //fill ctor
-    display_int(&a);
-    push_front(&a, 20);
-    push_back(&a, 30);
-    display_int(&a);
-    pop_front(&a);
-    display_int(&a);
-    pop_back(&a);
-    pop_back(&a);
-    display_int(&a);
-    insert(&a, a.head->next, 1, 20);
-    display_int(&a);
-    assert(find(&a, 200) == NULL);
-    assert(find(&a, 20) != NULL);
+    list(int)* a;
+    a = new_list(int, 3, 10); //fill ctor
+    display_int(a);
+    push_front(a, 20);
+    push_back(a, 30);
+    display_int(a);
+    pop_front(a);
+    display_int(a);
+    pop_back(a);
+    pop_back(a);
+    display_int(a);
+    insert(a, a->head->next, 1, 20);
+    display_int(a);
+    assert(find(a, 200) == NULL);
+    assert(find(a, 20) != NULL);
+    iterator_list(int)* it = begin(a);
+    if(it)
+    {
+        printf("printing using iterators\n");
+        while(it != end(a))
+        {
+            printf("%d ", iter_list_deref(it));
+            iter_list_next(it);
+        }
+        printf("\n");
+    }
+
 }

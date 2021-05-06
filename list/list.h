@@ -36,6 +36,8 @@
         void (*pop_back)(list_##type* list); \
         list_node_##type* (*insert)(list_##type* list, list_node_##type* node, int n, type data); \
         list_node_##type* (*find)(list_##type* list, type data); \
+        list_node_##type* (*begin)(list_##type* list); \
+        list_node_##type* (*end)(list_##type* list); \
         void (*delete)(list_##type** list); \
     }; \
     typedef struct list_functions_pointers_##type list_functions_pointers_##type; \
@@ -51,6 +53,8 @@
     void pop_back_##type (list_##type* list); \
     list_node_##type* insert_##type(list_##type* list, list_node_##type* node, int n, type data); \
     list_node_##type* find_##type(list_##type* list, type data); \
+    list_node_##type* begin_##type(list_##type* list); \
+    list_node_##type* end_##type(list_##type* list); \
     void delete_##type(list_##type** list); \
     \
     \
@@ -65,6 +69,8 @@
         &pop_back_##type, \
         &insert_##type, \
         &find_##type, \
+        &begin_##type, \
+        &end_##type, \
         &delete_##type \
     }; \
     \
@@ -197,6 +203,17 @@
         return NULL; \
     } \
     \
+    list_node_##type* begin_##type(list_##type* list) \
+    {\
+        return list->head; \
+    } \
+    list_node_##type* end_##type(list_##type* list) \
+    {\
+        if(list->tail) \
+           return list->tail->next; \
+        return NULL; \
+    } \
+    \
     void delete_##type(list_##type** list) \
     {\
         list_node_##type* temp = (*list)->head; \
@@ -323,6 +340,35 @@
 #ifndef FIND_FUNC
 #define FIND_FUNC
 #define find(list, data) (list)->functions->find(list, data)
+#endif
+
+#ifndef BEGIN_FUNC
+#define BEGIN_FUNC
+#define begin(list) (list)->functions->begin(list)
+#endif
+
+#ifndef END_FUNC
+#define END_FUNC
+#define end(list) (list)->functions->end(list)
+#endif
+
+
+//iterator
+#define iterator_list(type) list_node_##type 
+
+#ifndef ITER_LIST_DEREF_FUNC
+#define ITER_LIST_DEREF_FUNC
+#define iter_list_deref(it) it->data
+#endif 
+
+#ifndef ITER_LIST_FORWARD_FUNC
+#define ITER_LIST_FORWARD_FUNC
+#define iter_list_forward(it) it = it->next
+#endif 
+
+#ifndef ITER_LIST_BACKWARD_FUNC
+#define ITER_LIST_BACKWARD_FUNC
+#define iter_list_backward(it) it = it->prev
 #endif
 
 #endif
