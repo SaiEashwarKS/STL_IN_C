@@ -32,6 +32,8 @@
         const type (*back)(const list_##type* list); \
         void (*push_front)(list_##type* list, type data); \
         void (*push_back)(list_##type* list, type data); \
+        void (*pop_front)(list_##type* list); \
+        void (*pop_back)(list_##type* list); \
         void (*delete)(list_##type** list); \
     }; \
     typedef struct list_functions_pointers_##type list_functions_pointers_##type; \
@@ -43,6 +45,8 @@
     const type back_##type(const list_##type* list); \
     void push_front_##type(list_##type*, type data); \
     void push_back_##type(list_##type* list, type data); \
+    void pop_front_##type(list_##type* list); \
+    void pop_back_##type(list_##type* list); \
     void delete_##type(list_##type** list); \
     \
     \
@@ -53,6 +57,8 @@
         &back_##type, \
         &push_front_##type, \
         &push_back_##type, \
+        &pop_front_##type, \
+        &pop_back_##type, \
         &delete_##type \
     }; \
     \
@@ -118,6 +124,36 @@
             list->tail = new_node; \
         } \
         ++list->size; \
+    } \
+    \
+    void pop_front_##type(list_##type* list) \
+    {\
+        if(list->head == NULL) \
+            return; \
+        list_node_##type* temp = list->head; \
+        list->head = temp->next; \
+        free(temp); \
+        if(list->head == NULL) list->tail = NULL; \
+        else \
+        {\
+            list->head->prev = NULL; \
+        } \
+        --list->size; \
+    } \
+    \
+    void pop_back_##type(list_##type* list) \
+    {\
+        if(list->tail == NULL) \
+            return; \
+        list_node_##type* temp = list->tail; \
+        list->tail = temp->prev; \
+        free(temp); \
+        if(list->tail == NULL) list->head = NULL; \
+        else \
+        {\
+            list->tail->next = NULL; \
+        } \
+        --list->size; \
     } \
     \
     void delete_##type(list_##type** list) \
@@ -200,32 +236,42 @@
 //therefore, the user need not enter the type as an argument in delete like in ctor 
 #ifndef DELETE_FUNC
 #define DELETE_FUNC
-#define delete(list) list->functions->delete(&list)
+#define delete(list) (list)->functions->delete(&list)
 #endif
 
 #ifndef SIZE_FUNC
 #define SIZE_FUNC
-#define size(list) list->functions->size(list)
+#define size(list) (list)->functions->size(list)
 #endif
 
 #ifndef EMPTY_FUNC
 #define EMPTY_FUNC
-#define empty(list) list->functions->empty(list)
+#define empty(list) (list)->functions->empty(list)
 #endif
 
 #ifndef FRONT_FUNC
 #define FRONT_FUNC
-#define front(list) list->functions->front(list)
+#define front(list) (list)->functions->front(list)
 #endif
 
 #ifndef PUSH_FRONT_FUNC
 #define PUSH_FRONT_FUNC
-#define push_front(list, data) list->functions->push_front(list, data)
+#define push_front(list, data) (list)->functions->push_front(list, data)
 #endif
 
 #ifndef PUSH_BACK_FUNC
 #define PUSH_BACK_FUNC
-#define push_back(list, data) list->functions->push_back(list, data)
+#define push_back(list, data) (list)->functions->push_back(list, data)
+#endif
+
+#ifndef POP_FRONT_FUNC
+#define POP_FRONT_FUNC
+#define pop_front(list) (list)->functions->pop_front(list)
+#endif
+
+#ifndef POP_BACK_FUNC
+#define POP_BACK_FUNC
+#define pop_back(list) (list)->functions->pop_back(list)
 #endif
 
 #endif

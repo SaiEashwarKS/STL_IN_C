@@ -9,6 +9,8 @@ functions intended to be used by users:
     const type back(const list_##type* list); 
     void push_front(list_##type* list, type data);
     void push_back(list_##type* list, type data); 
+    void pop_front(list_##type* list);
+    void pop_back(list_##type* list);
     void delete(list_##type** list);
 
     list(type)* new_list(type, arg, ...) //if arg is 0 (there can be any number of arguments after 0, they'll be ignored), default ctor is called, 

@@ -29,13 +29,6 @@ void display_char(list(char)* list)
 
 int main()
 {
-    list(int)* a;
-    a = new_list(int, 3, 10); //fill ctor
-    display_int(a);
-    push_front(a, 20);
-    push_back(a, 30);
-    display_int(a);
-
     list(char)* c = new_list(char, 0); //default ctor
     display_char(c);
     push_back(c, 'a');
@@ -47,4 +40,16 @@ int main()
     delete(c);
     if(c == NULL)
         printf("c is null\n");
+
+    list(int) a;
+    a = *new_list(int, 3, 10); //fill ctor
+    display_int(&a);
+    push_front(&a, 20);
+    push_back(&a, 30);
+    display_int(&a);
+    pop_front(&a);
+    display_int(&a);
+    pop_back(&a);
+    pop_back(&a);
+    display_int(&a);
 }
