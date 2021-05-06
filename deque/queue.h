@@ -27,6 +27,8 @@
 		type (*back)(const deque_##type*);\
 		void (*insert)(deque_##type*,type);\
 		void (*remove)(deque_##type*);\
+		type* (*begin)(const deque_##type*);\
+		type* (*end)(const deque_##type*);\
 	};\
 \
 	typedef struct functions_deque_##type deque_funcs_##type;\
@@ -39,6 +41,8 @@
 	type qback_ele_##type(const deque_##type* dec);\
 	void qinsert_##type(deque_##type* dec,type elem);\
 	void qremove_##type(deque_##type* dec);\
+	type* qbegin_##type(const deque_##type*);\
+	type* qend_##type(const deque_##type*);\
 \
 	deque_funcs_##type funobj={\
 		&qsize_##type, \
@@ -48,7 +52,9 @@
 		&qfront_ele_##type,\
 		&qback_ele_##type,\
 		&qinsert_##type,\
-		&qremove_##type\
+		&qremove_##type,\
+		&qbegin_##type,\
+		&qend_##type\
 	};\
 \
 	int qsize_##type(const deque_##type* dec)\
@@ -108,6 +114,18 @@
 		}\
 		dec->front=(dec->front+1)%(dec->maxie);\
 		--dec->size;\
+	}\
+	type* qbegin_##type(const deque_##type* dec)\
+	{\
+		if (dec->size==0)\
+			return dec->queue;\
+		return dec->queue+dec->front;\
+	}\
+	type* qend_##type(const deque_##type* dec)\
+	{\
+		if (dec->size==0)\
+			return dec->queue;\
+		return dec->queue+dec->back;\
 	}\
 \
 	deque_##type* new_deque_zero_##type()\
