@@ -57,6 +57,7 @@
     list_##type* new_list_##type(int n, ...); \
     list_##type* new_list_default_##type(); \
     list_##type* new_list_fill_##type(int n, va_list args); \
+    list_##type* new_list_copy_##type(list_##type* rhs, ...); \
     list_node_##type* create_node_##type(type data); \
     \
     \
@@ -149,6 +150,17 @@
         } \
         return list; \
     } \
+    list_##type* new_list_copy_##type(list_##type* rhs, ...) \
+    {\
+        list_##type* list = new_list_default_##type(); \
+        list_node_##type* temp = rhs->head; \
+        while(temp != NULL) \
+        {\
+            push_back_##type(list, temp->data); \
+            temp = temp->next; \
+        } \
+        return list; \
+    } \
     \
     list_node_##type* create_node_##type(type data) \
     {\
@@ -160,7 +172,10 @@
     } \
 
 #define list(type) list_##type
-#define new_list(type, n, ...) new_list_##type(n, ##__VA_ARGS__)
+//#define new_list(type, n, ...) new_list_##type(n, ##__VA_ARGS__)
+#define new_list(type, arg1, ...) _Generic ((arg1), \
+                                            int : new_list_##type, \
+                                            list_##type* : new_list_copy_##type) (arg1, ##__VA_ARGS__)
 #define empty(list) list->functions->empty(list)
 #define size(list) list->functions->size(list)
 #define front(list) list->functions->front(list)

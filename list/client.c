@@ -2,9 +2,9 @@
 #include<stdio.h>
 
 define_list(int);
-define_list(double);
+define_list(char);
 
-void display(list(int)* list)
+void display_int(list(int)* list)
 {
     list_node_int* temp = list->head;
     for(int i = 0; i < size(list); ++i)
@@ -15,14 +15,33 @@ void display(list(int)* list)
     printf("\n");
 }
 
+void display_char(list(char)* list)
+{
+    list_node_char* temp = list->head;
+    for(int i = 0; i < size(list); ++i)
+    {
+        printf("%c ", temp->data);
+        temp = temp->next;
+    }
+    printf("\n");
+}
+
 int main()
 {
-    list(int)* a;list(double)* b;
+    list(int)* a;
     a = new_list(int, 3, 10);
-    b= new_list(double, 3, 10);
     //printf("front: %d size: %d\n", front(a), size(a));
-    display(a);
+    display_int(a);
     push_front(a, 20);
     push_back(a, 30);
-    display(a);
+    display_int(a);
+
+    list(char)* c = new_list(char, 0);
+    display_char(c);
+    push_back(c, 'a');
+    push_back(c, 'b');
+    push_front(c, 'c');
+    display_char(c);
+    list(char)* c2 = new_list(char, c);
+    display_char(c2);
 }
