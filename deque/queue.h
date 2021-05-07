@@ -175,58 +175,58 @@
 									  deque_##type*: copy_deque_##type)(argi,##__VA_ARGS__)
 #ifndef EMPTY_FUNC
 #define EMPTY_FUNC							  
-#define empty(queue) (queue)->functions->empty(queue)
+#define empty(queue) (queue)->functions->empty((queue))
 #endif
 
 #ifndef BEGIN_FUNC
 #define BEGIN_FUNC							  
-#define begin(queue) (queue)->functions->begin(queue)
+#define begin(queue) (queue)->functions->begin((queue))
 #endif
 
 #ifndef END_FUNC
 #define END_FUNC							  
-#define end(queue) (queue)->functions->end(queue)
+#define end(queue) (queue)->functions->end((queue))
 #endif
 
 
 #ifndef SIZE_FUNC
 #define SIZE_FUNC
-#define size(queue) (queue)->functions->size(queue)
+#define size(queue) (queue)->functions->size((queue))
 #endif
 
 #ifndef MAX_SIZE_FUNC
 #define MAX_SIZE_FUNC
-#define max_size(queue) (queue)->functions->max_size(queue)
+#define max_size(queue) (queue)->functions->max_size((queue))
 #endif
 
 #ifndef AT_FUNC
 #define AT_FUNC
-#define at(queue,position) (queue)->functions->at(queue,position)
+#define at(queue,position) (queue)->functions->at((queue),position)
 #endif
 
 #ifndef FRONT_FUNC
 #define FRONT_FUNC
-#define front(queue) (queue)->functions->front(queue)
+#define front(queue) (queue)->functions->front((queue))
 #endif
 
 #ifndef BACK_FUNC
 #define BACK_FUNC
-#define back(queue) (queue)->functions->back(queue)
+#define back(queue) (queue)->functions->back((queue))
 #endif
 
 #ifndef INSERT_FUNC
 #define INSERT_FUNC
-#define insert(queue,elem) (queue)->functions->insert(queue,elem)
+#define insert(queue,elem) (queue)->functions->insert((queue),elem)
 #endif
 
 #ifndef POP_FUNC
 #define POP_FUNC
-#define pop(queue) (queue)->functions->remove(queue)
+#define pop(queue) (queue)->functions->remove((queue))
 #endif
 
 #ifndef CLEAR_FUNC
 #define CLEAR_FUNC
-#define clear(queue) (queue)->size=0;queue->front=-1;queue->back=-1
+#define clear(queue) (queue)->size=0;(queue)->front=-1;(queue)->back=-1
 #endif
 
 #endif
