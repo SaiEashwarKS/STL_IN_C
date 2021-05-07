@@ -50,7 +50,7 @@ deque_node_##type -> a linked list like data structure to store the data.
 - clear -> just clears the deque by making the size=0 and pointers to NULL.
 - pop -> removes the first element in the deque
 
-**USAGE**
+##USAGE
 
 I have 2 header files with similar function definitions and declarations.
 
