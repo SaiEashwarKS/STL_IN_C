@@ -47,5 +47,5 @@ deque_node_##type -> a linked list like data structure to store the data.
 **Modifiers:**
 
 - insert -> to insert at the end of the deque
-- erase -> just clears the deque by making the size=0 and pointers to NULL.
+- clear -> just clears the deque by making the size=0 and pointers to NULL.
 - pop -> removes the first element in the deque
