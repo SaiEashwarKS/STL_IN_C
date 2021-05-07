@@ -44,6 +44,7 @@
         list_node_##type* (*insert)(list_##type* list, list_node_##type* node, int n, type data); \
         void (*remove_list) (list_##type* list, type data); \
         void (*remove_if_list) (list_##type* list, int (*pred)(type a)); \
+        void (*clear) (list_##type* list); \
         list_node_##type* (*find)(list_##type* list, type data); \
         void (*reverse)(list_##type* list); \
         void (*sort)(list_node_##type** head); \
@@ -67,6 +68,7 @@
     list_node_##type* insert_##type(list_##type* list, list_node_##type* node, int n, type data); \
     void remove_list_##type(list_##type* list, type data); \
     void remove_if_list_##type(list_##type* list, int (*pred)(type data)); \
+    void clear_##type(list_##type* list); \
     list_node_##type* find_##type(list_##type* list, type data); \
     void reverse_##type (list_##type* list); \
     void sort_##type (list_node_##type** head); \
@@ -89,6 +91,7 @@
         &insert_##type, \
         &remove_list_##type, \
         &remove_if_list_##type, \
+        &clear_##type, \
         &find_##type, \
         &reverse_##type, \
         &sort_##type, \
@@ -221,8 +224,11 @@
     void remove_list_##type(list_##type* list, type data) \
     {\
         list_node_##type* temp = list->head; \
+        list_node_##type* temp2; \
+        int is_deleted = 0; \
         while(temp) \
         {\
+            is_deleted = 0; \
             if(temp->data == data) \
             {\
                 if(list->head == temp) list->head = temp->next; \
@@ -230,8 +236,12 @@
                 if(temp->prev) temp->prev->next = temp->next; \
                 if(temp->next) temp->next->prev = temp->prev; \
                 --list->size; \
+                temp2 = temp; \
+                temp = temp->next; \
+                free(temp2); \
+                is_deleted = 1; \
             } \
-            temp = temp->next; \
+            if(!is_deleted) temp = temp->next; \
         } \
     } \
     \
@@ -246,6 +256,20 @@
             } \
             temp = temp->next; \
         } \
+    } \
+    \
+    void clear_##type(list_##type* list) \
+    {\
+        list_node_##type* temp = list->head; \
+        list_node_##type* temp2; \
+        while(temp) \
+        {\
+            temp2 = temp; \
+            temp = temp -> next; \
+            free(temp2); \
+        } \
+        list->size = 0; \
+        list->head = list->tail = NULL; \
     } \
     \
     list_node_##type* find_##type(list_##type* list, type data) \
@@ -486,6 +510,11 @@
 #ifndef REMOVE_IF_list_FUNC
 #define REMOVE_IF_list_FUNC
 #define remove_if_list(list, pred) (list)->functions->remove_if_list(list, pred)
+#endif
+
+#ifndef CLEAR_FUNC
+#define CLEAR_FUNC
+#define clear(list) (list)->functions->clear(list)
 #endif
 
 #ifndef FIND_FUNC

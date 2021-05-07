@@ -5,6 +5,7 @@
 define_list(int);
 define_list(char);
 
+
 void display_int(list(int) * list)
 {
     list_node_int *temp = list->head;
@@ -102,7 +103,6 @@ int main()
     push_back(a, 30);
     printf("\nforward iterator\n");
     iterator_list(int) *it = begin(a);
-    printf("forward iteration\n");
     while (iter_list_notequal(it, end(a)))
     {
         printf("%d ", iter_list_deref(it));
@@ -113,7 +113,6 @@ int main()
     //reverse iterator
     printf("\nreverse iterator\n");
     iterator_list(int) *it2 = rbegin(a);
-    printf("reverse iteration\n");
     while (iter_list_notequal(it2, rend(a)))
     {
         printf("%d ", iter_list_deref(it2));
@@ -136,4 +135,15 @@ int main()
     sort(a);
     printf("after sort : ");
     display_int(a);
+
+    //clear
+    printf("\nclear\n");
+    printf("before clearing : ");
+    display_int(a);
+    printf("size : %d\n", size(a));
+    clear(a);
+    printf("after clearing : ");
+    display_int(a);
+    printf("size : %d\n", size(a));
+
 }
