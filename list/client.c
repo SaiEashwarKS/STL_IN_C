@@ -1,5 +1,4 @@
 #include "list.h"
-#include"deque.h"
 #include <stdio.h>
 #include <assert.h>
 
@@ -102,8 +101,16 @@ int main()
 
     //find
     printf("\nfind\n");
-    assert(find(a, 200) == NULL);
-    assert(find(a, 20) != NULL);
+    printf("list : ");
+    display_int(a);
+    if(find(a, 200) == NULL) printf("200 not found\n");
+    if(find(a, 20) != NULL) printf("found %d\n", find(a, 20)->data);
+
+    //find_if
+    printf("\nfind elements greater than 20\n");
+    printf("list : ");
+    display_int(a);
+    if(find_if(a, &my_compare) != NULL) printf("found %d\n", find_if(a, &my_compare)->data);
 
     //forward iterator
     push_front(a, 10);

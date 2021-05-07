@@ -46,6 +46,7 @@
         void (*remove_if_list) (list_##type* list, int (*pred)(type a)); \
         void (*clear) (list_##type* list); \
         list_node_##type* (*find)(list_##type* list, type data); \
+        list_node_##type* (*find_if)(list_##type* list, int(*pred)(type a)); \
         void (*reverse)(list_##type* list); \
         void (*sort)(list_node_##type** head); \
         void (*sort_by)(list_node_##type** head, int(*pred)(type a, type b)); \
@@ -71,6 +72,7 @@
     void remove_if_list_##type(list_##type* list, int (*pred)(type data)); \
     void clear_list_##type(list_##type* list); \
     list_node_##type* find_list_##type(list_##type* list, type data); \
+    list_node_##type* find_if_list_##type(list_##type* list, int(*pred)(type a)); \
     void reverse_list_##type (list_##type* list); \
     void sort_list_##type (list_node_##type** head); \
     void sort_by_list_##type(list_node_##type** head, int(*pred)(type a, type b)); \
@@ -95,6 +97,7 @@
         &remove_if_list_##type, \
         &clear_list_##type, \
         &find_list_##type, \
+        &find_if_list_##type, \
         &reverse_list_##type, \
         &sort_list_##type, \
         &sort_by_list_##type, \
@@ -282,6 +285,18 @@
         while(temp != NULL) \
         {\
             if(temp->data == data) \
+                return temp; \
+            temp = temp->next; \
+        } \
+        return NULL; \
+    } \
+    \
+    list_node_##type* find_if_list_##type(list_##type* list, int(*pred)(type a)) \
+    {\
+        list_node_##type* temp = list->head; \
+        while(temp != NULL) \
+        {\
+            if(pred(temp->data)) \
                 return temp; \
             temp = temp->next; \
         } \
@@ -539,6 +554,11 @@
 #ifndef FIND_FUNC
 #define FIND_FUNC
 #define find(list, data) (list)->functions->find(list, data)
+#endif
+
+#ifndef FIND_IF_FUNC
+#define FIND_IF_FUNC
+#define find_if(list, pred) (list)->functions->find_if(list, pred)
 #endif
 
 #ifndef REVERSE_FUNC
