@@ -44,6 +44,7 @@
         list_node_##type* (*insert)(list_##type* list, list_node_##type* node, int n, type data); \
         void (*remove_list) (list_##type* list, type data); \
         list_node_##type* (*find)(list_##type* list, type data); \
+        void (*reverse)(list_##type* list); \
         iterator_list_##type* (*begin)(list_##type* list); \
         iterator_list_##type* (*end)(list_##type* list); \
         iterator_list_##type* (*rbegin)(list_##type* list); \
@@ -64,6 +65,7 @@
     list_node_##type* insert_##type(list_##type* list, list_node_##type* node, int n, type data); \
     void remove_list_##type(list_##type* list, type data); \
     list_node_##type* find_##type(list_##type* list, type data); \
+    void reverse_##type (list_##type* list); \
     iterator_list_##type* begin_##type(list_##type* list); \
     iterator_list_##type* end_##type(list_##type* list); \
     iterator_list_##type* rbegin_##type(list_##type* list); \
@@ -83,6 +85,7 @@
         &insert_##type, \
         &remove_list_##type, \
         &find_##type, \
+        &reverse_##type, \
         &begin_##type, \
         &end_##type, \
         &rbegin_##type, \
@@ -234,6 +237,22 @@
             temp = temp->next; \
         } \
         return NULL; \
+    } \
+    \
+    void reverse_##type (list_##type* list) \
+    {\
+        list_node_##type* node = list->head; \
+        list_node_##type* temp; \
+        while(node) \
+        {\
+            temp = node->next; \
+            node->next = node->prev; \
+            node->prev = temp; \
+            node = temp; \
+        } \
+        temp = list->head; \
+        list->head = list->tail;\
+        list->tail = temp; \
     } \
     \
     iterator_list_##type* begin_##type(list_##type* list) \
@@ -399,6 +418,11 @@
 #define find(list, data) (list)->functions->find(list, data)
 #endif
 
+#ifndef REVERSE_FUNC
+#define REVERSE_FUNC
+#define reverse(list) (list)->functions->reverse(list)
+#endif
+
 #ifndef BEGIN_FUNC
 #define BEGIN_FUNC
 #define begin(list) (list)->functions->begin(list)
@@ -423,29 +447,14 @@
 //iterator
 #define iterator_list(type) iterator_list_##type
 
-#ifndef ITER_LIST_DEREF_FUNC
-#define ITER_LIST_DEREF_FUNC
 #define iter_list_deref(it) it->iter->data
-#endif 
 
-#ifndef ITER_LIST_EQUAL_FUNC
-#define ITER_LIST_EQUAL_FUNC
 #define iter_list_equal(it1, it2) it1->iter == it2->iter
-#endif 
 
-#ifndef ITER_LIST_NOTEQUAL_FUNC
-#define ITER_LIST_NOTEQUAL_FUNC
 #define iter_list_notequal(it1, it2) it1->iter != it2->iter
-#endif 
 
-#ifndef ITER_LIST_FORWARD_FUNC
-#define ITER_LIST_FORWARD_FUNC
 #define iter_list_forward(it) it->iter = it->iter!=NULL ? (it->is_reverse ? it->iter->prev : it->iter->next) : NULL
-#endif 
 
-#ifndef ITER_LIST_BACKWARD_FUNC
-#define ITER_LIST_BACKWARD_FUNC
 #define iter_list_backward(it) it->iter = it->iter!=NULL ? (it->is_reverse ? it->iter->next : it->iter->prev) : NULL
-#endif
 
 #endif
