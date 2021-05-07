@@ -70,7 +70,7 @@ To use in a C file:
 - Declare a pointer as deque(type)* var_name. Example: deque(int)* a.
 - Initialize it by calling ```new_deque(type,<argi>,<optional argument>)```. Example : a = new_deque(int,5,6)-> initializes a deque with first 5 elements as 6
 	- 'argi'
-		- can be an integer to denote intial number of elements followed by the optional argument to represent which values need to be stored.
+		- can be an integer to denote initial number of elements followed by the optional argument to represent which value needs to be stored.
 		- can be a pointer to some other deque.
 - Then other functions can be called as fun_name(pointer). Example: size(a)
 
