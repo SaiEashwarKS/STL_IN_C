@@ -1,4 +1,5 @@
 #include "list.h"
+#include"deque.h"
 #include <stdio.h>
 #include <assert.h>
 
