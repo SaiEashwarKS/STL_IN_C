@@ -1,6 +1,3 @@
-Issues : 
-va_arg (in new_list_fill_##type) works well only for int
-the type of data cannot be nested pointers
 
 functions intended to be used by users:
     int empty(const list_##type* list);
