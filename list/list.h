@@ -48,6 +48,7 @@
         list_node_##type* (*find)(list_##type* list, type data); \
         void (*reverse)(list_##type* list); \
         void (*sort)(list_node_##type** head); \
+        void (*sort_by)(list_node_##type** head, int(*pred)(type a, type b)); \
         iterator_list_##type* (*begin)(list_##type* list); \
         iterator_list_##type* (*end)(list_##type* list); \
         iterator_list_##type* (*rbegin)(list_##type* list); \
@@ -72,6 +73,7 @@
     list_node_##type* find_##type(list_##type* list, type data); \
     void reverse_##type (list_##type* list); \
     void sort_##type (list_node_##type** head); \
+    void sort_by_##type(list_node_##type** head, int(*pred)(type a, type b)); \
     iterator_list_##type* begin_##type(list_##type* list); \
     iterator_list_##type* end_##type(list_##type* list); \
     iterator_list_##type* rbegin_##type(list_##type* list); \
@@ -95,6 +97,7 @@
         &find_##type, \
         &reverse_##type, \
         &sort_##type, \
+        &sort_by_##type, \
         &begin_##type, \
         &end_##type, \
         &rbegin_##type, \
@@ -108,7 +111,8 @@
     list_##type* new_list_fill_##type(int n, va_list args); \
     list_##type* new_list_copy_##type(list_##type* rhs, ...); \
     list_node_##type* create_node_##type(type data); \
-    list_node_##type* merge_##type(list_node_##type* a, list_node_##type* b); \
+    int less_equal_list_##type(type a, type b); \
+    list_node_##type* merge_##type(list_node_##type* a, list_node_##type* b, int (*pred)(type a, type b)); \
     list_node_##type* split_##type(list_node_##type* source); \
     \
     \
@@ -308,7 +312,18 @@
         list_node_##type* second = split_##type(temp_head); \
         sort_##type(&temp_head); \
         sort_##type(&second); \
-        *head = merge_##type(temp_head, second); \
+        *head = merge_##type(temp_head, second, &less_equal_list_##type); \
+    } \
+    \
+    void sort_by_##type(list_node_##type** head, int (*pred)(type a, type b)) \
+    {\
+        if(*head == NULL || (*head)->next == NULL) \
+            return; \
+        list_node_##type* temp_head = *head; \
+        list_node_##type* second = split_##type(temp_head); \
+        sort_##type(&temp_head); \
+        sort_##type(&second); \
+        *head = merge_##type(temp_head, second, pred); \
     } \
     \
     iterator_list_##type* begin_##type(list_##type* list) \
@@ -409,23 +424,27 @@
         new_node->prev = NULL; \
         return new_node; \
     } \
-    list_node_##type* merge_##type(list_node_##type* a, list_node_##type* b) \
+    int less_equal_list_##type(type a, type b) \
+    {\
+        return a <= b; \
+    } \
+    list_node_##type* merge_##type(list_node_##type* a, list_node_##type* b, int (*pred)(type a, type b)) \
     {\
         if(a == NULL) \
             return (b); \
         if(b == NULL) \
             return (a); \
         \
-        if(a->data <= b->data) \
+        if(pred(a->data, b->data)) \
         {\
-            a->next = merge_##type(a->next, b); \
+            a->next = merge_##type(a->next, b, pred); \
             a->next->prev = a; \
             a ->prev = NULL; \
             return a; \
         } \
         else \
         {\
-            b->next = merge_##type(a, b->next); \
+            b->next = merge_##type(a, b->next, pred); \
             b->next->prev = b; \
             b -> prev = NULL; \
             return b; \
@@ -530,6 +549,11 @@
 #ifndef SORT_FUNC
 #define SORT_FUNC
 #define sort(list) (list)->functions->sort(&list->head)
+#endif
+
+#ifndef SORT_BY_FUNC
+#define SORT_BY_FUNC
+#define sort_by(list, pred) (list)->functions->sort_by(&list->head, pred)
 #endif
 
 #ifndef BEGIN_FUNC

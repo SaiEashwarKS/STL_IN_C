@@ -34,7 +34,13 @@ int my_compare(int a)
 {
     return a > 20;
 }
-int (*mycompare)(int a) = &my_compare;
+
+int greater_equal(int a, int b)
+{
+    return a >= b;
+}
+
+
 
 int main()
 {
@@ -89,7 +95,7 @@ int main()
     push_back(a, 40);
     printf("before removing : ");
     display_int(a);
-    remove_if_list(a, mycompare);
+    remove_if_list(a, &my_compare);
     printf("after removing using my_compare (remove all elements greater than 20): ");
     display_int(a);
 
@@ -133,6 +139,14 @@ int main()
     printf("Before sort : ");
     display_int(a);
     sort(a);
+    printf("after sort : ");
+    display_int(a);
+
+    //sort_by
+    printf("\nsort in descending\n");
+    printf("Before sort : ");
+    display_int(a);
+    sort_by(a, &greater_equal);
     printf("after sort : ");
     display_int(a);
 
