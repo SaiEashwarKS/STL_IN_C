@@ -46,6 +46,7 @@
         void (*remove_if_list) (list_##type* list, int (*pred)(type a)); \
         list_node_##type* (*find)(list_##type* list, type data); \
         void (*reverse)(list_##type* list); \
+        void (*sort)(list_node_##type** head); \
         iterator_list_##type* (*begin)(list_##type* list); \
         iterator_list_##type* (*end)(list_##type* list); \
         iterator_list_##type* (*rbegin)(list_##type* list); \
@@ -68,6 +69,7 @@
     void remove_if_list_##type(list_##type* list, int (*pred)(type data)); \
     list_node_##type* find_##type(list_##type* list, type data); \
     void reverse_##type (list_##type* list); \
+    void sort_##type (list_node_##type** head); \
     iterator_list_##type* begin_##type(list_##type* list); \
     iterator_list_##type* end_##type(list_##type* list); \
     iterator_list_##type* rbegin_##type(list_##type* list); \
@@ -89,6 +91,7 @@
         &remove_if_list_##type, \
         &find_##type, \
         &reverse_##type, \
+        &sort_##type, \
         &begin_##type, \
         &end_##type, \
         &rbegin_##type, \
@@ -102,6 +105,8 @@
     list_##type* new_list_fill_##type(int n, va_list args); \
     list_##type* new_list_copy_##type(list_##type* rhs, ...); \
     list_node_##type* create_node_##type(type data); \
+    list_node_##type* merge_##type(list_node_##type* a, list_node_##type* b); \
+    list_node_##type* split_##type(list_node_##type* source); \
     \
     \
     int empty_##type (const list_##type* list) \
@@ -271,6 +276,17 @@
         list->tail = temp; \
     } \
     \
+    void sort_##type(list_node_##type** head) \
+    {\
+        if(*head == NULL || (*head)->next == NULL) \
+            return; \
+        list_node_##type* temp_head = *head; \
+        list_node_##type* second = split_##type(temp_head); \
+        sort_##type(&temp_head); \
+        sort_##type(&second); \
+        *head = merge_##type(temp_head, second); \
+    } \
+    \
     iterator_list_##type* begin_##type(list_##type* list) \
     {\
         iterator_list_##type* it = (iterator_list_##type*)malloc(sizeof(iterator_list_##type)); \
@@ -369,6 +385,44 @@
         new_node->prev = NULL; \
         return new_node; \
     } \
+    list_node_##type* merge_##type(list_node_##type* a, list_node_##type* b) \
+    {\
+        if(a == NULL) \
+            return (b); \
+        if(b == NULL) \
+            return (a); \
+        \
+        if(a->data <= b->data) \
+        {\
+            a->next = merge_##type(a->next, b); \
+            a->next->prev = a; \
+            a ->prev = NULL; \
+            return a; \
+        } \
+        else \
+        {\
+            b->next = merge_##type(a, b->next); \
+            b->next->prev = b; \
+            b -> prev = NULL; \
+            return b; \
+        } \
+    } \
+    \
+    list_node_##type* split_##type(list_node_##type* source) \
+    {\
+        list_node_##type* slow = source; \
+        list_node_##type* fast = source; \
+        \
+        while(fast->next && fast->next->next) \
+        {\
+            fast = fast->next->next; \
+            slow = slow->next; \
+        }\
+        list_node_##type* res = slow->next; \
+        slow->next = NULL; \
+        return res; \
+    } 
+    
 
 #define list(type) list_##type
 
@@ -442,6 +496,11 @@
 #ifndef REVERSE_FUNC
 #define REVERSE_FUNC
 #define reverse(list) (list)->functions->reverse(list)
+#endif
+
+#ifndef SORT_FUNC
+#define SORT_FUNC
+#define sort(list) (list)->functions->sort(&list->head)
 #endif
 
 #ifndef BEGIN_FUNC

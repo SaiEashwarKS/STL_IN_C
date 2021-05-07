@@ -128,4 +128,12 @@ int main()
     printf("reverse of a : ");
     reverse(a);
     display_int(a);
+
+    //sort
+    printf("\nsort\n");
+    printf("Before sort : ");
+    display_int(a);
+    sort(a);
+    printf("after sort : ");
+    display_int(a);
 }
