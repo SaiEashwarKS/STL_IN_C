@@ -13,9 +13,9 @@ list.h : contains the necessary declarations and definitions for list
 
 ### Execution:
 Compile and execute the client file
-Ex :
-$ gcc client.c
-$ ./a.out
+Ex :  
+$ gcc client.c  
+$ ./a.out  
 
 ### Implementation overview:
 
@@ -38,10 +38,10 @@ List is doubly linked list implementation allowing users to create doubly linked
 
 ### CONTAINER PROPERTIES:
 
-*Sequence*
+**Sequence**  
 Elements in sequence containers are ordered in a strict linear sequence. Individual elements are accessed by their position in this sequence.
 
-*Doubly-linked list*
+**Doubly-linked list**  
 Each element keeps information on how to locate the next and the previous elements, allowing constant time insert and erase operations before or after a specific element (even of entire ranges), but no direct random access.
 
 ### MEMBER FUNCTIONS
