@@ -29,8 +29,10 @@ deque_node_##type -> a linked list like data structure to store the data.
 
 **Iterators:**
 
-- begin -> points to the first element of queue
+- begin -> points to the first element of the deque
 - end -> points to a location past the last element
+- rbegin -> points to the last element of the deque
+- rend -> points to a location previous to the first element
 
 **Capacity:**
 
