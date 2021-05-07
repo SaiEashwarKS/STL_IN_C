@@ -27,6 +27,14 @@ void display_char(list(char) * list)
     printf("\n");
 }
 
+
+
+int my_compare(int a)
+{
+    return a > 20;
+}
+int (*mycompare)(int a) = &my_compare;
+
 int main()
 {
     printf("\ndefault ctor\n");
@@ -67,8 +75,21 @@ int main()
 
     //remove
     printf("\nremove\n");
+    printf("before removing : ");
+    display_int(a);
     remove_list(a, 10);
     remove_list(a, 200);
+    printf("after removing 10 and 200 : ");
+    display_int(a);
+
+    //remove_if
+    printf("\nremove_if\n");
+    push_back(a, 10);
+    push_back(a, 40);
+    printf("before removing : ");
+    display_int(a);
+    remove_if_list(a, mycompare);
+    printf("after removing using my_compare (remove all elements greater than 20): ");
     display_int(a);
 
     //find
@@ -78,9 +99,10 @@ int main()
 
     //forward iterator
     push_front(a, 10);
+    push_back(a, 30);
     printf("\nforward iterator\n");
     iterator_list(int) *it = begin(a);
-    printf("\nforward iteration\n");
+    printf("forward iteration\n");
     while (iter_list_notequal(it, end(a)))
     {
         printf("%d ", iter_list_deref(it));
@@ -91,7 +113,7 @@ int main()
     //reverse iterator
     printf("\nreverse iterator\n");
     iterator_list(int) *it2 = rbegin(a);
-    printf("\nreverse iteration\n");
+    printf("reverse iteration\n");
     while (iter_list_notequal(it2, rend(a)))
     {
         printf("%d ", iter_list_deref(it2));

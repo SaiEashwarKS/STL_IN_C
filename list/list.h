@@ -43,6 +43,7 @@
         void (*pop_back)(list_##type* list); \
         list_node_##type* (*insert)(list_##type* list, list_node_##type* node, int n, type data); \
         void (*remove_list) (list_##type* list, type data); \
+        void (*remove_if_list) (list_##type* list, int (*pred)(type a)); \
         list_node_##type* (*find)(list_##type* list, type data); \
         void (*reverse)(list_##type* list); \
         iterator_list_##type* (*begin)(list_##type* list); \
@@ -64,6 +65,7 @@
     void pop_back_##type (list_##type* list); \
     list_node_##type* insert_##type(list_##type* list, list_node_##type* node, int n, type data); \
     void remove_list_##type(list_##type* list, type data); \
+    void remove_if_list_##type(list_##type* list, int (*pred)(type data)); \
     list_node_##type* find_##type(list_##type* list, type data); \
     void reverse_##type (list_##type* list); \
     iterator_list_##type* begin_##type(list_##type* list); \
@@ -84,6 +86,7 @@
         &pop_back_##type, \
         &insert_##type, \
         &remove_list_##type, \
+        &remove_if_list_##type, \
         &find_##type, \
         &reverse_##type, \
         &begin_##type, \
@@ -222,6 +225,19 @@
                 if(temp->prev) temp->prev->next = temp->next; \
                 if(temp->next) temp->next->prev = temp->prev; \
                 --list->size; \
+            } \
+            temp = temp->next; \
+        } \
+    } \
+    \
+    void remove_if_list_##type(list_##type* list, int (*pred)(type data)) \
+    {\
+        list_node_##type* temp = list->head; \
+        while(temp) \
+        {\
+            if(pred(temp->data)) \
+            {\
+                remove_list_##type(list, temp->data); \
             } \
             temp = temp->next; \
         } \
@@ -411,6 +427,11 @@
 #ifndef REMOVE_list_FUNC
 #define REMOVE_list_FUNC
 #define remove_list(list, data) (list)->functions->remove_list(list, data)
+#endif
+
+#ifndef REMOVE_IF_list_FUNC
+#define REMOVE_IF_list_FUNC
+#define remove_if_list(list, pred) (list)->functions->remove_if_list(list, pred)
 #endif
 
 #ifndef FIND_FUNC
