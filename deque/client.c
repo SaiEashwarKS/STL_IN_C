@@ -42,9 +42,25 @@ int main()
 	pop(a);
 	printf("\nSIZE: %d\n",size(a));
 	printf("\nBACK: %d\n",back(a));
-	clear(a);
+	//clear(a);
 	//printkaro(b);
 	printf("\nSIZE: %d\n",size(a));
 	printf("HELLO WORLD\n");
+	//ITERATOR
+	iterator_deque(int)* b;
+	b=begin(a);
+	printf("\n YO YO IT %d\n",iterator_deque_deref(b));
+	while(iterator_deque_notequal(b,end(a)))
+	{
+		printf("\nIT %d\n",iterator_deque_deref(b));
+		iterator_deque_forward(b);
+	}
+	b=rbegin(a);
+	printf("\nYO YO IT %d\n",iterator_deque_deref(b));
+	while(iterator_deque_notequal(b,rend(a)))
+	{
+		printf("\nIT %d\n",iterator_deque_deref(b));
+		iterator_deque_forward(b);
+	}
 }
 

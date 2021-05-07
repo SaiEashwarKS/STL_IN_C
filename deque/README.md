@@ -29,8 +29,10 @@ deque_node_##type -> a linked list like data structure to store the data.
 
 **Iterators:**
 
-- begin -> points to the first element of queue
+- begin -> points to the first element of the deque
 - end -> points to a location past the last element
+- rbegin -> points to the last element of the deque
+- rend -> points to a location previous to the first element
 
 **Capacity:**
 
@@ -49,3 +51,26 @@ deque_node_##type -> a linked list like data structure to store the data.
 - insert -> to insert at the end of the deque
 - clear -> just clears the deque by making the size=0 and pointers to NULL.
 - pop -> removes the first element in the deque
+
+## USAGE
+
+I have 2 header files with similar function definitions and declarations.
+
+- `deque.h` -> is a linked list type implementation of a deque.
+- `queue.h` -> stores the elements in an array storing elements of the given type.
+
+Both these header files have `stdlib` and `stdarg` header files already included.
+
+To use in a C file:
+
+1) Just include the header file of your choice (either `queue.h` or `deque.h`) in your code.
+2) In the global scope define the type of deque you need.
+	Example: define_queue(int): Where we are intending to use a deque storing elements of type int.
+3) To use a deque: 
+- Declare a pointer as deque(type)* var_name. Example: deque(int)* a.
+- Initialize it by calling ```new_deque(type,<argi>,<optional argument>)```. Example : a = new_deque(int,5,6)-> initializes a deque with first 5 elements as 6
+	- 'argi'
+		- can be an integer to denote initial number of elements followed by the optional argument to represent which value needs to be stored.
+		- can be a pointer to some other deque.
+- Then other functions can be called as fun_name(pointer). Example: size(a)
+
