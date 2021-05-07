@@ -29,37 +29,46 @@ void display_char(list(char) * list)
 
 int main()
 {
+    printf("\n1\n");
     list(char) *c = new_list(char, 0); //default ctor
-    display_char(c);
     push_back(c, 'a');
     push_back(c, 'b');
-    push_front(c, 'c');
     display_char(c);
+    printf("\n2\n");
     list(char) *c2 = new_list(char, c); //copy ctor
     display_char(c2);
-    delete (c);
+    delete (c); //delete
     if (c == NULL)
         printf("c is null\n");
 
-    printf("\n");
+    printf("\n4\n");
     list(int) * a;
     a = new_list(int, 2, 10); //fill ctor
     display_int(a);
 
     //push
+    printf("\n5\n");
     push_front(a, 20);
     push_back(a, 30);
     push_back(a, 40);
     display_int(a);
 
     //pop
+    printf("\n6\n");
     pop_front(a);
     display_int(a);
     pop_back(a);
     display_int(a);
 
     //insert
-    insert(a, a->head->next, 1, 20);
+    printf("\n7\n");
+    insert(a, iter_list_forward(begin(a)), 1, 20);
+    display_int(a);
+
+    //remove
+    printf("\n8\n");
+    remove_list(a, 10);
+    remove_list(a, 200);
     display_int(a);
 
     //find
@@ -67,6 +76,8 @@ int main()
     assert(find(a, 20) != NULL);
 
     //forward iterator
+    push_front(a, 10);
+    printf("\n9\n");
     iterator_list(int) *it = begin(a);
     printf("\nforward iteration\n");
     while (iter_list_notequal(it, end(a)))
@@ -77,6 +88,7 @@ int main()
     printf("\n");
 
     //reverse iterator
+    printf("\n10\n");
     iterator_list(int) *it2 = rbegin(a);
     printf("\reverse iteration\n");
     while (iter_list_notequal(it2, rend(a)))
