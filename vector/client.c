@@ -57,23 +57,18 @@ int main()
     display_int(a);
 
     //insert
-    //printf("\ninsert\n");
-    //insert(a, iter_list_forward(begin(a)), 1, 20);
-    //display_int(a);
+    printf("\ninsert\n");
+    iterator_vector(int) *it4 = begin(a);
+    iter_vector_add(it4, 4);
+    it4 = insert(a, it4, 50);
+    iter_vector_add(it4, 3);
+    it4 = insert(a, it4, 40);
+    display_int(a);
 
-    //at
+    //find
     printf("\nfind\n");
     display_int(a);
     printf("Find 50: %d\n", find(a, 50));
-
-    /*//erase
-    printf("\nerase\n");
-    printf("before removing : ");
-    display_int(a);
-    remove_list(a, 10);
-    remove_list(a, 200);
-    printf("after removing 10 and 200 : ");
-    display_int(a);*/
 
     //at
     printf("\nat\n");
@@ -85,14 +80,15 @@ int main()
     display_int(a);
     printf("Size of a: %d\n", size(a));
 
-    //size
+    //capacity
     printf("\ncapacity\n");
     printf("capacity of a: %d\n", capacity(a));
 
-    //at
-    printf("\nat\n");
-    display_int(a);
-    printf("Elelment at position 2: %d\n", at(a, 2));
+    //reserve
+    printf("\nreserve\n");
+    printf("reserve 16\n");
+    reserve(a, 16);
+    printf("capacity of a: %d\n", capacity(a));
 
     //front&back
     printf("\nfront & back\n");
@@ -100,14 +96,48 @@ int main()
     printf("front of a: %d\nback of a: %d\n", front(a), back(a));
 
     //forward iterator
-    push_back(a, 40);
     printf("\nforward iterator\n");
     iterator_vector(int) *it = begin(a);
-    printf("forward iteration\n");
-    while (iter_list_notequal(it, end(a)))
+    while (iter_vector_notequal(it, end(a)))
     {
-        printf("%d ", *it);
-        iter_list_forward(it);
+        printf("%d ", iter_vector_deref(it));
+        iter_vector_forward(it);
     }
     printf("\n");
+
+    //reverse iterator
+    printf("\nreverse iterator\n");
+    iterator_vector(int) *it2 = rbegin(a);
+    while (iter_vector_notequal(it2, rend(a)))
+    {
+        printf("%d ", iter_vector_deref(it2));
+        iter_vector_forward(it2);
+    }
+    printf("\n");
+
+    //random access iterator
+    printf("\nrandom access iterator\n");
+    iterator_vector(int) *it3 = begin(a);
+    while(iter_vector_less(it3, end(a)))
+    {
+        printf("%d ", iter_vector_deref(it3));
+        iter_vector_forward(it3);
+    }
+    printf("\n");
+    it3 = begin(a);
+    iter_vector_add(it3, 3);
+    printf("it+3: %d\n", iter_vector_deref(it3));
+    iter_vector_subtract(it3, 2);
+    printf("it-2: %d\n", iter_vector_deref(it3));
+
+    //erase
+    printf("\nerase\n");
+    printf("before erasing : ");
+    display_int(a);
+    it2 = begin(a);
+    it3 = begin(a);
+    iter_vector_add(it3, 3);
+    erase(a, it2, it3);
+    printf("after erasing from 0 to 3 : ");
+    display_int(a);
 }
