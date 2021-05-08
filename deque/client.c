@@ -1,8 +1,11 @@
 #include <stdio.h>
 #include "deque.h"
 // #include "list.h"
-
-define_deque(double);
+typedef struct user
+{
+	int id;int age;
+}user;
+define_deque(user);
 //define_list(int);
 
 /*
@@ -16,50 +19,52 @@ void printkaro(deque_int* a)//this is for the array type implementation
 	printf("\n");
 }
 */
-void printkaro(deque_double* a)
-{
-	//printf("\nFRONT: %d SIZE:%d BACK:%d\n",a->front,a->size,a->back);
-	deque_node_double* i=a->front;
-	printf("\n");
-	for(int j=0;j<a->size;++j)
-	{printf("%lf, ",i->data);i=i->next;}
-	printf("\n");
-}
+// void printkaro(deque_double* a)
+// {
+// 	//printf("\nFRONT: %d SIZE:%d BACK:%d\n",a->front,a->size,a->back);
+// 	deque_node_double* i=a->front;
+// 	printf("\n");
+// 	for(int j=0;j<a->size;++j)
+// 	{printf("%lf, ",i->data);i=i->next;}
+// 	printf("\n");
+// }
 int main()
 {
-	deque(double)* a;//list(int)* b;
-	a=new_deque(double,5,11.5);
+	deque(user)* a;//list(int)* b;
+	user g={5,45};
+	a=new_deque(user,5,g);
 	//b=new_list(int,5,10);
 	printf("\nNON EMPTY: %d\n",empty(a));
 	printf("\nSIZE: %d\n",size(a));
 	printf("\nMAX SIZE: %d\n",max_size(a));
-	printf("\nAT: %lf\n",at(a,4));
-	printf("\nFRONT: %lf\n",front(a));
-	insert(a,11);
+	printf("\nAT: %d\n",at(a,4).age);
+	printf("\nFRONT: %d\n",front(a).age);
+	user k={6,46};
+	insert(a,k);
 	printf("\nAFTER SIZE: %d\n",size(a));
-	printf("\nBACK: %lf\n",back(a));
+	printf("\nBACK: %d\n",back(a).age);
 	//remove(a);
 	pop(a);
 	printf("\nSIZE: %d\n",size(a));
-	printf("\nBACK: %lf\n",back(a));
+	printf("\nBACK: %d\n",back(a).age);
 	//clear(a);
 	//printkaro(b);
 	printf("\nSIZE: %d\n",size(a));
 	printf("HELLO WORLD\n");
 	//ITERATOR
-	iterator_deque(double)* b;
+	iterator_deque(user)* b;
 	b=begin(a);
-	printf("\nFORWARD IT %lf\n",iterator_deque_deref(b));
+	printf("\nFORWARD IT %d\n",iterator_deque_deref(b).age);
 	while(iterator_deque_notequal(b,end(a)))
 	{
-		printf("%lf, ",iterator_deque_deref(b));
+		printf("%d, ",iterator_deque_deref(b).age);
 		iterator_deque_forward(b);
 	}
 	b=rbegin(a);
-	printf("\nBACKWARD IT %lf\n",iterator_deque_deref(b));
+	printf("\nBACKWARD IT %d\n",iterator_deque_deref(b).age);
 	while(iterator_deque_notequal(b,rend(a)))
 	{
-		printf("%lf, ",iterator_deque_deref(b));
+		printf("%d, ",iterator_deque_deref(b).age);
 		iterator_deque_forward(b);
 	}
 	printf("\n");
