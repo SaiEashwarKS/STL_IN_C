@@ -23,6 +23,11 @@
 		temp->data=data;\
 		return temp;\
 	}\
+	typedef struct iterator_queue_##type\
+	{\
+		int isrev;\
+		deque_node_##type* mainptr;\
+	}iterator_queue_##type;\
 	 \
 	typedef struct deque_##type \
 	{ \
@@ -41,8 +46,10 @@
 		type (*back)(const deque_##type*);\
 		void (*insert)(deque_##type*,type);\
 		void (*remove)(deque_##type*);\
-		deque_node_##type* (*begin)(const deque_##type*);\
-		deque_node_##type* (*end)(const deque_##type*);\
+		iterator_queue_##type* (*begin)(const deque_##type*);\
+		iterator_queue_##type* (*end)(const deque_##type*);\
+		iterator_queue_##type* (*rbegin)(const deque_##type*);\
+		iterator_queue_##type* (*rend)(const deque_##type*);\
 	};\
 \
 	typedef struct functions_deque_##type deque_funcs_##type;\
@@ -55,8 +62,10 @@
 	type qback_ele_##type(const deque_##type* dec);\
 	void qinsert_##type(deque_##type* dec,type elem);\
 	void qremove_##type(deque_##type* dec);\
-	deque_node_##type* qbegin_##type(const deque_##type*);\
-	deque_node_##type* qend_##type(const deque_##type*);\
+	iterator_queue_##type* qbegin_##type(const deque_##type* dec);\
+	iterator_queue_##type* qend_##type(const deque_##type* dec);\
+	iterator_queue_##type* qrbegin_##type(const deque_##type* dec);\
+	iterator_queue_##type* qrend_##type(const deque_##type* dec);\
 \
 	deque_funcs_##type funobj={\
 		&qsize_##type, \
@@ -68,7 +77,9 @@
 		&qinsert_##type,\
 		&qremove_##type,\
 		&qbegin_##type,\
-		&qend_##type\
+		&qend_##type,\
+		&qrbegin_##type,\
+		&qrend_##type\
 	};\
 \
 	int qsize_##type(const deque_##type* dec)\
@@ -143,17 +154,35 @@
 		dec->front=dec->front->next;\
 		--dec->size;\
 	}\
-	deque_node_##type* qbegin_##type(const deque_##type* dec)\
+	iterator_queue_##type* qbegin_##type(const deque_##type* dec)\
 	{\
-		if (dec->size==0)\
-			return NULL;\
-		return dec->front;\
+		\
+		iterator_queue_##type* iter = malloc(sizeof(iterator_queue_##type));\
+		iter->isrev=0;\
+		iter->mainptr=dec->front;\
+		return iter;\
 	}\
-	deque_node_##type* qend_##type(const deque_##type* dec)\
+	iterator_queue_##type* qend_##type(const deque_##type* dec)\
 	{\
-		if (dec->size==0)\
-			return NULL;\
-		return dec->back->next;\
+		iterator_queue_##type* iter = malloc(sizeof(iterator_queue_##type));\
+		iter->isrev=0;\
+		iter->mainptr=dec->back->next;\
+		return iter;\
+	}\
+	iterator_queue_##type* qrbegin_##type(const deque_##type* dec)\
+	{\
+		\
+		iterator_queue_##type* iter = malloc(sizeof(iterator_queue_##type));\
+		iter->isrev=1;\
+		iter->mainptr=dec->back;\
+		return iter;\
+	}\
+	iterator_queue_##type* qrend_##type(const deque_##type* dec)\
+	{\
+		iterator_queue_##type* iter = malloc(sizeof(iterator_queue_##type));\
+		iter->isrev=1;\
+		iter->mainptr=dec->front->prev;\
+		return iter;\
 	}\
 \
 	deque_##type* new_deque_zero_##type()\
@@ -203,58 +232,74 @@
 									  deque_##type*: copy_deque_##type)(argi,##__VA_ARGS__)
 #ifndef EMPTY_FUNC
 #define EMPTY_FUNC							  
-#define empty(queue) (queue)->functions->empty(queue)
+#define empty(queue) (queue)->functions->empty((queue))
 #endif
-
-#ifndef BEGIN_FUNC
-#define BEGIN_FUNC							  
-#define begin(queue) (queue)->functions->begin(queue)
-#endif
-
-#ifndef END_FUNC
-#define END_FUNC							  
-#define end(queue) (queue)->functions->end(queue)
-#endif
-
 
 #ifndef SIZE_FUNC
 #define SIZE_FUNC
-#define size(queue) (queue)->functions->size(queue)
+#define size(queue) (queue)->functions->size((queue))
 #endif
 
 #ifndef MAX_SIZE_FUNC
 #define MAX_SIZE_FUNC
-#define max_size(queue) (queue)->functions->max_size(queue)
+#define max_size(queue) (queue)->functions->max_size((queue))
 #endif
 
 #ifndef AT_FUNC
 #define AT_FUNC
-#define at(queue,position) (queue)->functions->at(queue,position)
+#define at(queue,position) (queue)->functions->at((queue),position)
 #endif
 
 #ifndef FRONT_FUNC
 #define FRONT_FUNC
-#define front(queue) (queue)->functions->front(queue)
+#define front(queue) (queue)->functions->front((queue))
 #endif
 
 #ifndef BACK_FUNC
 #define BACK_FUNC
-#define back(queue) (queue)->functions->back(queue)
+#define back(queue) (queue)->functions->back((queue))
 #endif
 
 #ifndef INSERT_FUNC
 #define INSERT_FUNC
-#define insert(queue,elem) (queue)->functions->insert(queue,elem)
+#define insert(queue,elem) (queue)->functions->insert((queue),elem)
 #endif
 
 #ifndef POP_FUNC
 #define POP_FUNC
-#define pop(queue) (queue)->functions->remove(queue)
+#define pop(queue) (queue)->functions->remove((queue))
 #endif
 
 #ifndef CLEAR_FUNC
 #define CLEAR_FUNC
-#define clear(queue) (queue)->size=0;queue->front=NULL;queue->back=NULL
+#define clear(queue) (queue)->size=0;(queue)->front=NULL;(queue)->back=NULL
 #endif
+
+#ifndef BEGIN_FUNC
+#define BEGIN_FUNC
+#define begin(queue) (queue)->functions->begin((queue))
+#endif
+
+#ifndef END_FUNC
+#define END_FUNC
+#define end(queue) (queue)->functions->end((queue))
+#endif
+
+#ifndef RBEGIN_FUNC
+#define RBEGIN_FUNC
+#define rbegin(queue) (queue)->functions->rbegin((queue))
+#endif
+
+#ifndef REND_FUNC
+#define REND_FUNC
+#define rend(queue) (queue)->functions->rend((queue))
+#endif
+
+#define iterator_deque(type) iterator_queue_##type
+#define iterator_deque_deref(it) (it)->mainptr->data
+#define iterator_deque_equal(it1,it2) (it1)->mainptr==(it2)->mainptr
+#define iterator_deque_notequal(it1,it2) (it1)->mainptr!=(it2)->mainptr
+#define iterator_deque_forward(it1) (it1)->mainptr=(it1)->mainptr?((it1)->isrev?(it1)->mainptr->prev:(it1)->mainptr->next):NULL
+#define iterator_deque_backward(it1) (it1)->mainptr=(it1)->mainptr?((it1)->isrev?(it1)->mainptr->next:(it1)->mainptr->prev):NULL
 
 #endif
