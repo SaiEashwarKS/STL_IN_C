@@ -49,18 +49,19 @@ int main()
 	//ITERATOR
 	iterator_deque(double)* b;
 	b=begin(a);
-	printf("\n YO YO IT %lf\n",iterator_deque_deref(b));
+	printf("\nFORWARD IT %lf\n",iterator_deque_deref(b));
 	while(iterator_deque_notequal(b,end(a)))
 	{
-		printf("\nIT %lf\n",iterator_deque_deref(b));
+		printf("%lf, ",iterator_deque_deref(b));
 		iterator_deque_forward(b);
 	}
 	b=rbegin(a);
-	printf("\nYO YO IT %lf\n",iterator_deque_deref(b));
+	printf("\nBACKWARD IT %lf\n",iterator_deque_deref(b));
 	while(iterator_deque_notequal(b,rend(a)))
 	{
-		printf("\nIT %lf\n",iterator_deque_deref(b));
+		printf("%lf, ",iterator_deque_deref(b));
 		iterator_deque_forward(b);
 	}
+	printf("\n");
 }
 
