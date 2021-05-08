@@ -72,7 +72,7 @@ Each element keeps information on how to locate the next and the previous elemen
 - const type front (list(type)*) : Access first element
 - const type back (list(type)*) : Access last element
 - iterator_list(type)* find (list(type)*, type) : Returns iterator to the element containing data, returns NULL if element not present
-
+- iterator_list(type)* find_if (list(type)*, int (\*pred)(type)) : Returns iterator to the first element satisfying the unary predicate, returns NULL if element not present
 
 *Modifiers*:
 
@@ -81,10 +81,12 @@ Each element keeps information on how to locate the next and the previous elemen
 - void pop_front (list(type)*) : Delete first element
 - void pop_back (list(type)*) : Delete last element
 - void insert (list(type)*, iterator_list(type)* pos, int n, type data) : Insert n elements having data before pos
-
+- void clear (list(type*)) : Clears all the elements and size becomes 0
 
 *Operations*:
 
 - void remove_list (list(type)*, type) : Remove all elements with specific value
 - void remove_if_list (list(type)*, int (*pred)(type)) : Remove elements satisfying condition
 - void reverse (list(type)*) : Reverse the list
+- void sort (list(type)*) : Sort the list
+- void sort_by (list(type)*, int(*pred)(type, type) : Sort the list based on the binary predicate

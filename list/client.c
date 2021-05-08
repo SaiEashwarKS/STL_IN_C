@@ -103,14 +103,17 @@ int main()
     printf("\nfind\n");
     printf("list : ");
     display_int(a);
-    if(find(a, 200) == NULL) printf("200 not found\n");
-    if(find(a, 20) != NULL) printf("found %d\n", find(a, 20)->data);
+    iterator_list(int)* res = find(a, 200);
+    if(res == NULL) printf("200 not found\n");
+    res = find(a, 20);
+    if(res != NULL) printf("found %d\n", iter_list_deref(res));
 
     //find_if
     printf("\nfind elements greater than 20\n");
     printf("list : ");
     display_int(a);
-    if(find_if(a, &my_compare) != NULL) printf("found %d\n", find_if(a, &my_compare)->data);
+    res = find_if(a, &my_compare);
+    if(res != NULL) printf("found %d\n", iter_list_deref(res));
 
     //forward iterator
     push_front(a, 10);

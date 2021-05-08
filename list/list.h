@@ -45,8 +45,8 @@
         void (*remove_list) (list_##type* list, type data); \
         void (*remove_if_list) (list_##type* list, int (*pred)(type a)); \
         void (*clear) (list_##type* list); \
-        list_node_##type* (*find)(list_##type* list, type data); \
-        list_node_##type* (*find_if)(list_##type* list, int(*pred)(type a)); \
+        iterator_list_##type* (*find)(list_##type* list, type data); \
+        iterator_list_##type* (*find_if)(list_##type* list, int(*pred)(type a)); \
         void (*reverse)(list_##type* list); \
         void (*sort)(list_node_##type** head); \
         void (*sort_by)(list_node_##type** head, int(*pred)(type a, type b)); \
@@ -71,8 +71,8 @@
     void remove_list_##type(list_##type* list, type data); \
     void remove_if_list_##type(list_##type* list, int (*pred)(type data)); \
     void clear_list_##type(list_##type* list); \
-    list_node_##type* find_list_##type(list_##type* list, type data); \
-    list_node_##type* find_if_list_##type(list_##type* list, int(*pred)(type a)); \
+    iterator_list_##type* find_list_##type(list_##type* list, type data); \
+    iterator_list_##type* find_if_list_##type(list_##type* list, int(*pred)(type a)); \
     void reverse_list_##type (list_##type* list); \
     void sort_list_##type (list_node_##type** head); \
     void sort_by_list_##type(list_node_##type** head, int(*pred)(type a, type b)); \
@@ -279,25 +279,35 @@
         list->head = list->tail = NULL; \
     } \
     \
-    list_node_##type* find_list_##type(list_##type* list, type data) \
+    iterator_list_##type* find_list_##type(list_##type* list, type data) \
     {\
         list_node_##type* temp = list->head; \
+        iterator_list_##type* res = (iterator_list_##type*)malloc(sizeof(iterator_list_##type)); \
+        res->is_reverse = 0; \
         while(temp != NULL) \
         {\
             if(temp->data == data) \
-                return temp; \
+            {\
+               res->iter = temp; \
+               return res; \
+            } \
             temp = temp->next; \
         } \
         return NULL; \
     } \
     \
-    list_node_##type* find_if_list_##type(list_##type* list, int(*pred)(type a)) \
+    iterator_list_##type* find_if_list_##type(list_##type* list, int(*pred)(type a)) \
     {\
         list_node_##type* temp = list->head; \
+        iterator_list_##type* res = (iterator_list_##type*)malloc(sizeof(iterator_list_##type)); \
+        res->is_reverse = 0; \
         while(temp != NULL) \
         {\
             if(pred(temp->data)) \
-                return temp; \
+            {\
+               res->iter = temp; \
+               return res; \
+            } \
             temp = temp->next; \
         } \
         return NULL; \
