@@ -74,3 +74,5 @@ To use in a C file:
 		- can be a pointer to some other deque.
 - Then other functions can be called as fun_name(pointer). Example: size(a)
 
+## ACKNOWLEDGEMENT
+Thanks [StackOverflow](https://stackoverflow.com/a/11035347/13398932)!
