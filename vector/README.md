@@ -29,7 +29,7 @@ Vectors are sequence containers representing dynamic arrays with the ability to 
 
 #### Implementation fields of iterator :
 
-|*Field_Name*|*Data Type*|*Usae*|
+|*Field_Name*|*Data Type*|*Usage*|
 | :---: | :---: | :---: |
 |iter| type* |Points to an element in the vector |
 |is_reverse| Integer |Specifies if the iterator is forward or reverse|
