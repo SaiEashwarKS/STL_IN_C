@@ -68,12 +68,19 @@ int main()
     //find
     printf("\nfind\n");
     display_int(a);
-    printf("Find 50: %d\n", find(a, 50));
+    iterator_vector(int) *it5 = find(a, 50);
+    if(iter_vector_notequal(it5, end(a)))
+        printf("Found 50\n");
+    else printf("50 not found\n");
+    it5 = find(a, 70);
+    if(iter_vector_notequal(it5, end(a)))
+        printf("Found 70\n");
+    else printf("70 not found\n");
 
     //at
     printf("\nat\n");
     display_int(a);
-    printf("Elelment at position 2: %d\n", at(a, 2));
+    printf("Element at position 2: %d\n", at(a, 2));
 
     //size
     printf("\nsize\n");
@@ -118,7 +125,7 @@ int main()
     //random access iterator
     printf("\nrandom access iterator\n");
     iterator_vector(int) *it3 = begin(a);
-    while(iter_vector_less(it3, end(a)))
+    while(iter_vector_lesser(it3, end(a)))
     {
         printf("%d ", iter_vector_deref(it3));
         iter_vector_forward(it3);
@@ -139,5 +146,13 @@ int main()
     iter_vector_add(it3, 3);
     erase(a, it2, it3);
     printf("after erasing from 0 to 3 : ");
+    display_int(a);
+
+    //clear
+    printf("\nclear\n");
+    printf("Vector: ");
+    display_int(a);
+    printf("After clear: ");
+    clear(a);
     display_int(a);
 }

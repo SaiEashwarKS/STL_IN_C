@@ -33,8 +33,9 @@
         type (*at)(vector_##type* vector, int pos); \
         type (*front)(vector_##type* vector); \
         type (*back)(vector_##type* vector); \
-        int (*find)(vector_##type* vector, type data); \
+        iterator_vector_##type* (*find)(vector_##type* vector, type data); \
         void (*reserve)(vector_##type* vector, int cap); \
+        void (*clear)(vector_##type* vector); \
         iterator_vector_##type* (*insert)(vector_##type* vector, iterator_vector_##type* it, type data); \
         iterator_vector_##type* (*erase)(vector_##type* vector, iterator_vector_##type* it1, iterator_vector_##type* it2); \
         iterator_vector_##type* (*begin)(vector_##type* vector); \
@@ -54,10 +55,11 @@
     type at_##type(vector_##type* vector, int pos); \
     type front_##type(vector_##type* vector); \
     type back_##type(vector_##type* vector); \
-    int find_##type(vector_##type* vector, type data); \
+    iterator_vector_##type* find_##type(vector_##type* vector, type data); \
     void reserve_##type(vector_##type* vector, int cap); \
     iterator_vector_##type* insert_##type(vector_##type* vector, iterator_vector_##type* it, type data); \
     iterator_vector_##type* erase_##type(vector_##type* vector, iterator_vector_##type* it1, iterator_vector_##type* it2); \
+    void clear_##type(vector_##type* vector); \
     iterator_vector_##type* begin_##type(vector_##type* vector); \
     iterator_vector_##type* end_##type(vector_##type* vector); \
     iterator_vector_##type* rbegin_##type(vector_##type* vector); \
@@ -76,6 +78,7 @@
         &back_##type, \
         &find_##type, \
         &reserve_##type, \
+        &clear_##type, \
         &insert_##type, \
         &erase_##type, \
         &begin_##type, \
@@ -143,14 +146,20 @@
         return vector->data[vector->size -1]; \
     } \
     \
-    int find_##type(vector_##type* vector, type data) \
+    iterator_vector_##type* find_##type(vector_##type* vector, type data) \
     { \
+        iterator_vector_##type* it = (iterator_vector_##type*)malloc(sizeof(iterator_vector_##type)); \
+        it->is_reverse = 0; \
         for(int i=0; i<vector->size; ++i) \
         { \
             if(vector->data[i] == data) \
-                return i; \
+            { \
+                it->iter = vector->data + i; \
+                return it; \
+            } \
         } \
-        return vector->size; \
+        it->iter = vector->data + vector->size; \
+        return it; \
     } \
     \
     void reserve_##type(vector_##type* vector, int cap) \
@@ -165,6 +174,11 @@
             vector->capacity = cap; \
             vector->data = (type *)realloc(vector->data,vector->capacity * sizeof(type)); \
         } \
+    } \
+    \
+    void clear_##type(vector_##type* vector) \
+    { \
+        vector->size = 0; \
     } \
     \
     iterator_vector_##type* insert_##type(vector_##type* vector, iterator_vector_##type* it, type data) \
@@ -368,6 +382,11 @@
 #define reserve(vector, cap) (vector)->functions->reserve(vector, cap)
 #endif
 
+#ifndef CLEAR_FUNC
+#define CLEAR_FUNC
+#define clear(vector) (vector)->functions->clear(vector)
+#endif
+
 #ifndef INSERT_FUNC
 #define INSERT_FUNC
 #define insert(vector, it, data) (vector)->functions->insert(vector, it, data)
@@ -408,9 +427,9 @@
 #define iter_vector_backward(it) it->iter = it->is_reverse ? it->iter+1 : it->iter-1
 #define iter_vector_add(it, n) it->iter = it->iter+n
 #define iter_vector_subtract(it, n) it->iter = it->iter-n
-#define iter_vector_less(it1, it2) it1->iter < it2->iter
+#define iter_vector_lesser(it1, it2) it1->iter < it2->iter
 #define iter_vector_greater(it1, it2) it1->iter > it2->iter
-#define iter_vector_less_equal(it1, it2) it1->iter <= it2->iter
+#define iter_vector_lesser_equal(it1, it2) it1->iter <= it2->iter
 #define iter_vector_greater_equal(it1, it2) it1->iter >= it2->iter 
 
 #endif
