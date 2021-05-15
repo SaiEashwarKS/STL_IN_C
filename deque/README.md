@@ -25,7 +25,7 @@ deque_node_##type -> a linked list like data structure to store the data.
 
 ## MEMBER FUNCTIONS
 
-**Constructor:** Can be constructed via construct deque container or copy constructor.
+**Constructor:** Can be constructed via default constructors, parametrized constructors or copy constructor.
 
 **Iterators:**
 
